@@ -6,9 +6,9 @@ url:            "https://github.com/ruipfcosta"
 
 # Author
 author:
-  name:         Chester How
-  url:          https://chester.how
-  email:        chesterhow@gmail.com
+  name:         Rui Costa
+  url:          https://ruicosta.net
+  email:        rui.pfcosta@gmail.com
 
 # Build settings
 markdown:       kramdown

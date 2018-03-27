@@ -1,7 +1,7 @@
 # Site settings
-title:          Rui Costa
+title:          Rui Costa's Blog
 description:    "Rui Costa's blog"
-baseurl:        "/blog"
+baseurl:        ""
 url:            "https://github.com/ruipfcosta"
 
 # Author

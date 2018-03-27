@@ -1,7 +1,6 @@
 ---
-layout: post
+layout: page
 title: "About"
-author: "Chester"
 permalink: /about/
 ---
 

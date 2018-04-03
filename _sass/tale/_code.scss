@@ -1,6 +1,6 @@
 pre,
 code {
-  font-family: $monospaced;
+  font-family: $monospaced;  
 }
 
 code {
@@ -23,7 +23,7 @@ pre code {
 }
 
 .highlight {
-  background-color: $grey-3;
+  background-color: #444;
   border-radius: 3px;
   line-height: 1.4;
   margin: 0 0 1rem;

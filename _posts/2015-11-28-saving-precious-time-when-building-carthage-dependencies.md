@@ -16,7 +16,7 @@ What if you build a single dependency alone, and then integrate it with the rest
 
 Get **[carthage-build.sh](https://github.com/ruipfcosta/carthage-workarounds#carthage-buildsh)** and simply run it from the directory containing your Cartfile/Carthage directory:
 
-{% highlight bash %}
+{% highlight text %}
 ./carthage-build.sh -d 'github "ruipfcosta/AutoLayoutPlus"'
 {% endhighlight %}
 

@@ -4,7 +4,7 @@ title: "About"
 permalink: /about/
 ---
 
-![Photo]({{ "/assets/images/me.png" | absolute_url }}){: .center-image }
+![Photo]({{ "/assets/images/me.png" | relative_url }}){: .center-image }
 
 #### Hey, I'm Rui - I'm an iOS Engineer based in London, UK, currently working at [Yoyo Wallet](https://www.yoyowallet.com). I'm interested in Swift and iOS development, software architecture and functional programming. At the moment I'm also quite interested in Lisp, particularly Clojure.
 

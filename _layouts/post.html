@@ -2,28 +2,11 @@
 layout: default
 ---
 
-<div class="post">
-  <div class="post-info">
-    {% if page.date %}
-      <br>
-      <time datetime="{{ page.date }}">{{ page.date | date: "%B %d, %Y" }}</time>
-    {% endif %}
-  </div>
 
-  <h1 class="post-title">{{ page.title }}</h1>
-  <div class="post-line"></div>
+{% include post.html post=page %}
 
-  {{ content }}
+{% if site.author.disqus %}
+    {% include externals/disqus.html %}
+{% endif %}
 
-</div>
-
-<div class="pagination">
-  {% if page.next.url %}
-    <a href="{{ page.next.url | prepend: site.baseurl }}" class="left arrow">&#8592; Next article</a>
-  {% endif %}
-  {% if page.previous.url %}
-    <a href="{{ page.previous.url | prepend: site.baseurl }}" class="right arrow">Previous article &#8594;</a>
-  {% endif %}
-
-  <a href="#" class="top">Top</a>
-</div>
+{% include post/related.html %}

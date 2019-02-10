@@ -1,22 +1,25 @@
 ---
 layout: page
-title: "About"
+title: About
 permalink: /about/
+published: true
 ---
 
-![Photo]({{ "/assets/images/me.png" | relative_url }}){: .center-image }
+<div class="page" markdown="1">
 
-#### Hey, I'm Rui - I'm an iOS Engineer based in London, UK, currently working at [Yoyo Wallet](https://www.yoyowallet.com). I'm interested in Swift and iOS development, software architecture and functional programming. At the moment I'm also quite interested in Lisp, particularly Clojure.
+{% capture page_subtitle %}
+<img
+    class="me"
+    alt="{{ author.name }}"
+    src="{{ site.author.photo | relative_url }}"
+    srcset="{{ site.author.photo2x | relative_url }} 2x"
+/>
+{% endcapture %}
 
-#### In this space you'll probably find me blogging about some of these things!
+{% include page/title.html title=page.title subtitle=page_subtitle %}
 
-<br>
+## Some heading 
 
-<div class="icon-bar">
-    <a href="mailto:rui.pfcosta@gmail.com"><i class="fas fa-envelope"></i></a> 
-    <a href="https://twitter.com/ruipfcosta"><i class="fab fa-twitter"></i></a> 
-    <a href="https://github.com/ruipfcosta"><i class="fab fa-github"></i></a> 
-    <a href="https://www.linkedin.com/in/ruipfcosta/"><i class="fab fa-linkedin"></i></a>
+I'll alert the crew. Sure. You'd be surprised how far a hug goes with Geordi, or Worf. Did you come here for something in particular or just general Riker-bashing? You did exactly what you had to do. You considered all your options, you tried every alternative and then you made the hard choice. Your shields were failing, sir. Well, that's certainly good to know. A surprise party? Mr. Worf, I hate surprise parties. I would *never* do that to you. And blowing into maximum warp speed, you appeared for an instant to be in two places at once. How long can two people talk about nothing? I recommend you don't fire until you're within 40,000 kilometers. Congratulations - you just destroyed the Enterprise. Worf, It's better than music. It's jazz. Yes, absolutely, I do indeed concur, wholeheartedly! What's a knock-out like you doing in a computer-generated gin joint like this? I can't. As much as I care about you, my first duty is to the ship. Some days you get the bear, and some days the bear gets you.
+
 </div>
-
-<br>

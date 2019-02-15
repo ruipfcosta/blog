@@ -1,0 +1,4 @@
+---
+permalink: /archive/
+layout: posts
+---

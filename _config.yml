@@ -19,14 +19,14 @@ locale                   : "en-US"
 title                    : "rui costa"
 title_separator          : "-"
 name                     : "Rui Costa"
-description              : "An amazing website."
+description              : 
 url                      : "ruicosta.net"
 baseurl                  : ""
 repository               : "ruipfcosta/blog"
 teaser                   : # path of fallback teaser image, e.g. "/assets/images/500x300.png"
 logo                     : # path of logo image to display in the masthead, e.g. "/assets/images/88x88.png"
 masthead_title           : # overrides the website title displayed in the masthead, use " " for no title
-breadcrumbs              : true # true, false (default)
+breadcrumbs              : false # true, false (default)
 words_per_minute         : 200
 comments:
   provider               : # false (default), "disqus", "discourse", "facebook", "google-plus", "staticman", "staticman_v2", "utterances", "custom"
@@ -108,7 +108,7 @@ analytics:
 author:
   name             : "Rui Costa"
   avatar           : "/assets/images/photo.jpg"
-  bio              : "I am an amazing person."
+  bio              : "Lead iOS Engineer<br/>@ Yoyo Wallet"
   location         : "London, UK"
   email            :
   links:
@@ -289,8 +289,21 @@ defaults:
     values:
       layout: single
       author_profile: true
-      read_time: true
+      read_time: false
       comments: false
       share: false
       related: true
+      classes: wide
+
+  # # _pages
+  # - scope:
+  #     path: ""
+  #     type: pages
+  #   values:
+  #     layout: single
+  #     author_profile: false
+  #     read_time: true
+  #     comments: false
+  #     share: false
+  #     related: true
 

@@ -1,5 +1,5 @@
 # SITE CONFIGURATION
-baseurl: ""
+baseurl: "/blog"
 url: "https://ruicosta.net"
 
 # THEME-SPECIFIC CONFIGURATION
@@ -68,7 +68,7 @@ theme_settings:
 
 # PAGINATION
 paginate: 5
-paginate_path: "page:num"
+paginate_path: "blog/page:num"
 
 # BUILD SETTINGS
 markdown: kramdown

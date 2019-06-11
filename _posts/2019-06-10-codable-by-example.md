@@ -10,7 +10,7 @@ If you look at the declaration of Codable you'll see it is a simple typealias fo
 typealias Codable = Decodable & Encodable
 ```
 
-Today we'll be focusing specifically on the Decodable part. Decodable is meant to be used by types that, as the name suggests, can be decoded 😀. Here's what the declaration of Decodable looks like:
+In this article we'll be focusing specifically on the Decodable part. Decodable is meant to be used by types that, as the name suggests, can be decoded 😀. Here's what the declaration of Decodable looks like:
 
 ```swift
 public protocol Decodable {
@@ -18,7 +18,7 @@ public protocol Decodable {
 }
 ```
 
-As you can see the only requirement of Decodable is the implementation of an initializer which takes a `Decoder` as the only argument. Simple, right? Let's have a look at some examples.
+As you can see, the only requirement of Decodable is the implementation of an initializer which takes a `Decoder` as the only argument. Simple, right? Let's have a look at some examples.
 
 ## Simple Decodable example
 
@@ -33,7 +33,7 @@ Let's consider a simple JSON sample describing a board game entry:
 }
 ```
 
-Decoding this piece of JSON is quite straightforward, we just need to create a model object to hold the data, make it conform to Decodable, and decode it using the JSONDecoder class.
+Decoding this piece of JSON is straightforward, we just need to create a model object to hold the data, make it conform to Decodable, and decode it using the JSONDecoder class.
 
 ``` swift
 struct BoardGame: Decodable {
@@ -49,7 +49,7 @@ let boardGame = try decoder.decode(BoardGame.self, from: jsonData)
 
 ## Coding Keys
 
-Let's consider a small twist now. When fetching data from an API, especially one we don't control, it's usual to come across with payloads that use different styles such as camel case, snake case, uppercase, etc. Taking the previous JSON payload as an example, what happens if we are presented with this instead:
+Let's consider a small change now. When fetching data from an API, especially one we don't control, it's usual to come across with payloads that use different styles such as camel case, snake case, uppercase, etc. Taking the previous JSON payload as an example, what happens if we are presented with this instead?
 
 ```javascript
 {
@@ -60,7 +60,7 @@ Let's consider a small twist now. When fetching data from an API, especially one
 }
 ```
 
-Notice how the properties `min_players` and `max_players` are written in snake case. Surely we can just update our struct to match the snake case style on the payload, however it doesn't look idiomatic Swift.
+Notice how the properties `min_players` and `max_players` are written in snake case. Surely we could just update our struct to match the snake case style on the payload, however it doesn't really seem idiomatic Swift.
 
 ```swift
 struct BoardGame: Decodable {
@@ -71,7 +71,7 @@ struct BoardGame: Decodable {
 }
 ```
     
-Turns out we can make use of another protocol - CodingKey - to work around this while naming the properties using camel case. This approach also requires implementing *init(from decoder: Decoder)*.
+Turns out we can make use of another protocol - CodingKey - to work around this while naming the properties using camel case. This approach will also require implementing *init(from decoder: Decoder)*.
 
 ```swift
 struct BoardGame: Decodable {
@@ -100,11 +100,11 @@ let decoder = JSONDecoder()
 let boardGame = try decoder.decode(BoardGame.self, from: jsonData)
 ```
 
-In this example, we define a CodingKeys enum which describes the properties we want to extract from the JSON payload. Then, on the initilizer, we decode each of the properties using the respective key.
+In this example, we define a CodingKeys enum describing the properties we want to extract from the JSON payload. Then, on the initilizer, we decode each of the properties using the respective key.
 
-There is only one thing worth mentioning regarding the two approaches decribed above: you can't have the best of both worlds - either you allow all properties to be synthesized automatically by the compiler or you use the coding keys approach and decode all properties manually.
+There is something worth mentioning regarding the two approaches described above: you can't have the best of both worlds - either you allow all properties to be synthesized automatically by the compiler or you use the coding keys approach and decode all properties manually.
 
-**Note**: you may have noticed that while the BoardGame struct is written using camel case, the CodingKeys enum isn't. There is also a simple solution for this: we just need to define its raw values to be of type String and redefine those values. This approach is also quite useful when we want to use a different name for the properties on our struct than the JSON properties.
+**Note**: you may have noticed that, while the BoardGame struct is written using camel case, the CodingKeys enum isn't. The solution for this is simple, we just need to define its raw values to be of type String and redefine those values. This approach is also useful when we want to use a different name for the properties on our struct than the JSON properties.
 
 ```swift
 struct BoardGame: Decodable {
@@ -132,7 +132,7 @@ struct BoardGame: Decodable {
 
 ## Nested objects
 
-It would be great if all data we parse in our day-to-day was made of single-level objects, containing only a few properties. Sadly it isn't, but Codable can hadle it quite easily. Let's extend the JSON payload from the previous examples to include a new *otherDetails* property containig a nested object.
+It would be great if all data we parse in our day-to-day was made of single-level objects, containing only a few properties, but generally that's not the case. Let's extend the JSON payload from the previous examples to include a new *otherDetails* property containig a nested object.
 
 ```javascript
 {
@@ -148,7 +148,7 @@ It would be great if all data we parse in our day-to-day was made of single-leve
 }
 ```
 
-Things certainly got more interesting now, however Codable is still able to handle this. If the types contained in our struct also conform to Decodable, they too can be decoded along with the parent struct.
+Things certainly got more interesting, however Codable is still able to handle this. If the properties contained in our struct conform to Decodable, they too can be decoded along with the parent struct.
 
 ``` swift
 struct BoardGameDetails: Decodable {
@@ -169,15 +169,15 @@ let decoder = JSONDecoder()
 let boardGame = try decoder.decode(BoardGame.self, from: jsonData)
 ```
 
-Here we decided to create a new BoardGameDetails struct to hold the nested object containing the year, categories and mechanisms properties of a board game. In order to decode it as part of the BoardGame struct, the only thing we had to do was to make the new struct conform to Decodable.
+Here we decided to create a new BoardGameDetails struct to hold the nested object containing the year, categories and mechanisms properties of a board game. In order to decode it as part of the BoardGame struct, the only thing we have to do is to make the new struct conform to Decodable.
 
-Everything mentioned above related to coding keys still applies to the new struct, regardless of the implementation of the BoardGame struct. For example, we may decide we want to make use of coding keys when decoding BoardGame, but keep the default implementation on BoardGameDetails.
+Everything mentioned above related to coding keys still applies to the new struct, regardless of the implementation of the BoardGame struct. For instance, we may decide we want to make use of coding keys when decoding BoardGame, but keep the default implementation on BoardGameDetails.
 
 ### Does this mean I need to create a struct for every nested object?
 
-The answer is no! Sometimes you may be interested in decoding some (or even all) nested properties, but don't really want to create yet another struct. Perhaps holding all data under a single struct is enough. This gets worse when the object you're trying to parse contains not just one, but multiple nested objects.
+The answer is no! Sometimes you may be interested in decoding some (or even all) nested properties, but don't really want to create yet another struct. Perhaps holding all data under a single struct is enough. This gets worse when the object you are trying to parse contains not just one, but multiple nested objects.
 
-Again, let's see how we can work around this by extending the JSON payload from the previous examples.
+Again, let's see how we can work around this by extending the JSON payload from the previous examples:
 
 ```javascript
 {
@@ -208,7 +208,7 @@ struct BoardGame: Decodable {
 }
 ```
 
-If you try to decode this struct from the JSON payload above soon you'll realize it is not possible, as the year, categories and designer properties are actually contained in nested objects. Fortunatelly, it's not hard to achieve what we want. The solution again is to make use of coding keys and implement *init(from decoder: Decoder)*.
+If you try to decode this struct from the JSON payload above soon you'll realize it is not possible, as the year, categories and designer properties are actually contained in nested objects. Fortunatelly, it's not that hard to achieve what we want. The solution again is to make use of coding keys and implement *init(from decoder: Decoder)*.
 
 ```swift
 struct BoardGame: Decodable {
@@ -249,21 +249,15 @@ let decoder = JSONDecoder()
 let boardGame = try decoder.decode(BoardGame.self, from: data)
 ```
 
-Things might seem a little more complicated here but the idea is simple, we define the a "coding keys" enum for each object of the payload and proceed by handling the decoding process manually. It is not mandatory to nest the enums, but I find it nice to follow the structure of the payload.
+Things got a little more verbose now, but the idea is still simple, we define a "coding keys" enum for each objectand proceed by decoding the properties manually. It is not mandatory to nest the enums, but I find it nice to follow the structure of the payload.
 
-There are a couple of new methods used in the previous example:
+Notice how a new method was used in the previous example:
 
 ```swift
 let detailsContainer = try container.nestedContainer(keyedBy: CodingKeys.OtherDetailsCodingKeys.self, forKey: .otherDetails)
 ```
 
-and 
-
-```swift
-let creditsContainer = try container.nestedContainer(keyedBy: CodingKeys.Credits.self, forKey: .credits)
-```
-
-We use *nestedContainer(keyedBy:forKey:)* to decode the nested objects from the payload. The return type of this function is a new container holding the nested properties. From there we just need to decode those properties using the respective keys.
+We use *nestedContainer(keyedBy:forKey:)* to decode nested objects from the payload. The return type of this function is a new container holding the nested properties. From there we just need to decode its properties using the respective keys.
 
 
 ## Conclusion

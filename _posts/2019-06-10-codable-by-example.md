@@ -263,7 +263,7 @@ and
 let creditsContainer = try container.nestedContainer(keyedBy: CodingKeys.Credits.self, forKey: .credits)
 ```
 
-We use *nestedContainer(keyedBy:forKey:)* to decode the nested objects from the payload. The return type of this function is a new container containing the nested properties. From there we just need to decode those properties using the respective keys.
+We use *nestedContainer(keyedBy:forKey:)* to decode the nested objects from the payload. The return type of this function is a new container holding the nested properties. From there we just need to decode those properties using the respective keys.
 
 
 ## Conclusion

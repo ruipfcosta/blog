@@ -263,7 +263,7 @@ We use *nestedContainer(keyedBy:forKey:)* to decode nested objects from the payl
 
 It's really easy to use Codable (or Decodable to be more precise) to decode JSON data, and it provides great flexibility when it comes to dealing with nested objects/properties. We've also seen how simple it is to keep writing our model objects using idiomatic Swift, even if the JSON payload uses different styles such as snake case or others.
 
-In the [second part]({% post_url 2019-06-12-codable-by-example-part-2 %}) of this series, we'll see how to decode more complex JSON payloads containing nested arrays.
+In the [second part]({% post_url 2019-06-13-codable-by-example-part-2 %}) of this series, we'll see how to decode more complex JSON payloads containing nested arrays.
 
 Thanks for reading!
 

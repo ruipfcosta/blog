@@ -188,14 +188,14 @@ let decoder = JSONDecoder()
 let boardGame = try decoder.decode(OwnedBoardGamesResponse.self, from: data)
 ```
 
-It doesn't look that simple anymore, right? Let's go step by step. First we defined a `CodingKeys` enum (with a few nested enums) representing the structure of the JSON. In total we had to go four levels deep within the JSON to be able to retrieve all the data we wanted. We can see that the first level ("data") contains a nested object - we've learned in the previous article how to use `nestedContainer(keyedBy:)` to decode nested objects!
+It doesn't look that simple anymore, right? Let's go step by step. First we defined a `CodingKeys` enum (with a few nested enums) representing the structure of the JSON. In total we will have to go four levels deep within the JSON to be able to retrieve all the data we want. We can see that the first level ("data") contains a nested object - we've learned in the previous article how to use `nestedContainer(keyedBy:)` to decode nested objects!
 
-Nothing new until this point, however this time the "data" object contains a nested array (of objects... 😅). At this point you can see we introduced a new method `nestedUnkeyedContainer(forKey:)`. This method is analogous to `nestedContainer(keyedBy:)` but allows us to decode an array instead of an object.
+Nothing new until this point, however this time the "owned" property contains a nested array (of objects... 😅). At this point you can see we introduced a new method `nestedUnkeyedContainer(forKey:)`. This method is analogous to `nestedContainer(keyedBy:)` but allows us to decode an array instead of an object.
 
-From there onwards we just need to iterate the array by repeateadly invoking `nestedContainer(keyedBy:)` to decode the objects it contains. Each of those objects contains the "name" property we want to extract and... another array of objects ("links")! This means we just need to repeat the previous process in order to decode the data contained in those objects, until we get to the urls.
+From there onwards we just need to iterate the array by repeateadly invoking `nestedContainer(keyedBy:)` to decode the objects it contains. Each of those objects contains the "name" property we want to extract and... another array of objects ("links")! This means we just need to repeat the same process again in order to decode those objects, until we get to the urls.
 
 ## Conclusion
 
-Today we've seen how to leverage Decodable to have a very precise control over the data we want to extract from a JSON payload. Although in simple cases it is enough to create a struct and map it directly to the JSON, sometimes the structure of the JSON can be more intricate requiring custom logic to extract the data we're interested in.
+Today we've seen how to leverage Decodable to have a very precise control over the data we want to extract from a JSON payload. Although in simple cases it is enough to create a struct and map it directly to the JSON, sometimes the JSON structure can be more intricate requiring custom logic to extract the data we're interested in.
 
 Thanks for reading!

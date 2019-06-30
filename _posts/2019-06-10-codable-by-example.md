@@ -100,7 +100,7 @@ let decoder = JSONDecoder()
 let boardGame = try decoder.decode(BoardGame.self, from: jsonData)
 ```
 
-In this example, we define a CodingKeys enum describing the properties we want to extract from the JSON payload. Then, on the initilizer, we decode each of the properties using the respective key.
+In this example, we define a CodingKeys enum describing the properties we want to extract from the JSON payload. Then, on the initializer, we decode each of the properties using the respective key.
 
 There is something worth mentioning regarding the two approaches described above: you can't have the best of both worlds - either you allow all properties to be synthesized automatically by the compiler or you use the coding keys approach and decode all properties manually.
 
@@ -132,7 +132,7 @@ struct BoardGame: Decodable {
 
 ## Nested objects
 
-It would be great if all data we parse in our day-to-day was made of single-level objects, containing only a few properties, but generally that's not the case. Let's extend the JSON payload from the previous examples to include a new *otherDetails* property containig a nested object.
+It would be great if all data we parse in our day-to-day was made of single-level objects, containing only a few properties, but generally that's not the case. Let's extend the JSON payload from the previous examples to include a new *otherDetails* property containing a nested object.
 
 ```javascript
 {
@@ -208,7 +208,7 @@ struct BoardGame: Decodable {
 }
 ```
 
-If you try to decode this struct from the JSON payload above soon you'll realize it is not possible, as the year, categories and designer properties are actually contained in nested objects. Fortunatelly, it's not that hard to achieve what we want. The solution again is to make use of coding keys and implement *init(from decoder: Decoder)*.
+If you try to decode this struct from the JSON payload above soon you'll realize it is not possible, as the year, categories and designer properties are actually contained in nested objects. Fortunately, it's not that hard to achieve what we want. The solution again is to make use of coding keys and implement *init(from decoder: Decoder)*.
 
 ```swift
 struct BoardGame: Decodable {
@@ -249,7 +249,7 @@ let decoder = JSONDecoder()
 let boardGame = try decoder.decode(BoardGame.self, from: data)
 ```
 
-Things got a little more verbose now, but the idea is still simple, we define a "coding keys" enum for each objectand proceed by decoding the properties manually. It is not mandatory to nest the enums, but I find it nice to follow the structure of the payload.
+Things got a little more verbose now, but the idea is still simple, we define a "coding keys" enum for each object and proceed by decoding the properties manually. It is not mandatory to nest the enums, but I find it nice to follow the structure of the payload.
 
 Notice how a new method was used in the previous example:
 

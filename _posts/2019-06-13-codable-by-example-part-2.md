@@ -192,7 +192,7 @@ It doesn't look that simple anymore, right? Let's go step by step. First we defi
 
 Nothing new until this point, however this time the "owned" property contains a nested array (of objects... 😅). At this point you can see we introduced a new method `nestedUnkeyedContainer(forKey:)`. This method is analogous to `nestedContainer(keyedBy:)` but allows us to decode an array instead of an object.
 
-From there onwards we just need to iterate the array by repeateadly invoking `nestedContainer(keyedBy:)` to decode the objects it contains. Each of those objects contains the "name" property we want to extract and... another array of objects ("links")! This means we just need to repeat the same process again in order to decode those objects, until we get to the urls.
+From there onwards we just need to iterate the array by repeatedly invoking `nestedContainer(keyedBy:)` to decode the objects it contains. Each of those objects contains the "name" property we want to extract and... another array of objects ("links")! This means we just need to repeat the same process again in order to decode those objects, until we get to the urls.
 
 ## Conclusion
 

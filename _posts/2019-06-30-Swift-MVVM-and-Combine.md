@@ -177,8 +177,11 @@ It’s easy to design an MVVM architecture for our apps based on the new Combine
 
 And finally, it's great to see Apple coming up with their own FRP framework avoiding the need to link other third-party dependencies to our apps!
 
+You can find a sample project in this [Github repository](https://github.com/ruipfcosta/MVVM-Combine-Example/tree/master).
 
-Thanks for reading!
+Thanks for reading! 🎉
+
+
 
 --- 
 

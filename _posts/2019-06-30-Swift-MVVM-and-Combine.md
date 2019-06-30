@@ -70,7 +70,7 @@ In order to glue everything together we just need to define a `state` property o
 ```swift
 let state = CurrentValueSubject<State, Never>(.initial)
 
-init() {
+init(product: Product) {
     ...
 
     _ = state.sink(receiveValue: { [weak self] state in
@@ -97,7 +97,7 @@ And we can use the same approach as above to handle the actions:
 ```swift
 let action = PassthroughSubject<Action, Never>()
 
-init() {
+init(product: Product) {
     ...
 
     _ = action.sink(receiveValue: { [weak self] action in

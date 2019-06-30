@@ -109,10 +109,10 @@ func processAction(_ action: Action) {
     switch action {
     case .purchase:
         do {
-            backend.purchaseProduct(product.id)
+            try backend.purchaseProduct(id: product.id)
         } catch {
-            state = .error(message: error.localizedDescription)
-        }   
+            state.value = .error(message: error.localizedDescription)
+        }
     }
 }
 ```

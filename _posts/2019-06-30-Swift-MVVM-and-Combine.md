@@ -128,7 +128,7 @@ After all the progress we've made so far, the view will be incredibly simple to 
 class ViewController: UIViewController {
     @IBOutlet var titleLabel: UILabel!
     @IBOutlet var descriptionLabel: UILabel!
-    @IBOutlet var continueButton: UIButton!
+    @IBOutlet var purchaseButton: UIButton!
     @IBOutlet var errorLabel: UILabel!
 
     let viewModel = ViewModel(product: product) // assume we have a product object already
@@ -148,7 +148,7 @@ override func viewDidLoad() {
     self.cancelables = [
         viewModel.title.assign(to: \.text, on: titleLabel),
         viewModel.description.assign(to: \.text, on: descriptionLabel),
-        viewModel.buttonEnabled.assign(to: \.isEnabled, on: continueButton),
+        viewModel.buttonEnabled.assign(to: \.isEnabled, on: purchaseButton),
         viewModel.errorText.assign(to: \.text, on: errorLabel),
         viewModel.errorTextHidden.assign(to: \.isHidden, on: errorLabel)
     ]

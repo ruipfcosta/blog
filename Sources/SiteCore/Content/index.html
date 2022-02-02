@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+Rui Costa • Personal Website
+{% endblock %}
+
+{% block content %}
+
+{% include "page-header.html" %}
+
+<section class="blog-list px-3 py-5 p-md-5">
+    <div class="container">
+        <h2 class="section-title font-weight-bold mb-5">Latest articles</h2>
+        
+        {% for post in posts %}
+            {% include "post-item.html" %}
+        {% endfor %}
+                
+        <nav class="blog-nav nav nav-justified mt-5">
+            <a href="/blog.html" class="nav-link-next nav-item nav-link rounded"><i class="fas fa-arrow-alt-circle-right me-2"></i>View all articles</a>
+        </nav>
+    </div>
+</section>
+
+{% endblock %}

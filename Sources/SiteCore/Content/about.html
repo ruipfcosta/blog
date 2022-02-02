@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}
+Rui Costa • About
+{% endblock %}
+
+{% block content %}
+
+{% include "page-header.html" %}
+
+<section class="px-3 py-5 p-md-5">
+    <div class="container">
+        <h2 class="section-title font-weight-bold mb-4">Who am I?</h2>
+        <p>My name is Rui Costa and I'm a Software Engineer based in London, UK.</p>
+        <p>I have ~12 years of experience building software, most of them focused on iOS development. I've worked across different sectors such as telecommunications, education and financial services.</p>
+        <p>I've been using Swift practically since day one building iOS apps serving thousands of users. Currently I work as a Senior iOS Engineer at <a href="https://circa5000.com" target="_blank">CIRCA5000</a>.</p>
+        
+        <h2 class="section-title font-weight-bold mt-5 mb-4">TL;DR</h2>
+        <pre><code class="language-swift">let me = Human(
+    name: "Rui Costa",
+    location: "London, UK",
+    occupation: "Senior iOS Engineer @ CIRCA5000"
+)</code></pre>
+</section>
+{% endblock %}

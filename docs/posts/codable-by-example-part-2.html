@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+Codable by Example - Part 2
+</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rui Costa's personal website">
+    <meta name="author" content="Rui Costa">
+        git push -u origin
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    
+    <!-- FontAwesome JS -->
+    <script defer src="/assets/fontawesome/js/all.js"></script>
+    
+    <!-- Theme CSS -->
+    <link id="theme-style" rel="stylesheet" href="/assets/css/theme-9.css">
+        
+    <!-- Syntax highlight -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/stackoverflow-dark.min.css">
+
+</head>
+
+<body class="dark-mode">
+    
+    <header class="header text-center">
+        <div class="force-overflow">
+            <h1 class="blog-name pt-lg-4 mb-0"><a class="no-text-decoration" href="https://ruicosta.com">Rui Costa</a></h1>
+            
+            <nav class="navbar navbar-expand-lg navbar-dark" >
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div id="navigation" class="collapse navbar-collapse flex-column" >
+                    <div class="profile-section pt-3 pt-lg-0">
+                        <img class="profile-image mb-3 rounded-circle mx-auto" src="/assets/images/profile.png" alt="image" >
+                        
+                        <div class="bio mb-3">Hi, my name is Rui Costa and I'm a Software Engineer based in London, UK.</div><!--//bio-->
+                        <ul class="social-list list-inline py-2 mx-auto">
+                            <li class="list-inline-item"><a href="https://twitter.com/ruipfcosta"><i class="fab fa-twitter fa-fw"></i></a></li>
+                            <li class="list-inline-item"><a href="https://www.linkedin.com/in/ruipfcosta/"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
+                            <li class="list-inline-item"><a href="https://github.com/ruipfcosta"><i class="fab fa-github-alt fa-fw"></i></a></li>
+                        </ul><!--//social-list-->
+                        <hr>
+                    </div><!--//profile-section-->
+                    
+                    <ul class="navbar-nav flex-column text-start">
+                        <li class="nav-item">
+                            <a class="nav-link " href="/"><i class="fas fa-blog fa-home me-2"></i>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/blog.html"><i class="fas fa-blog fa-fw me-2"></i>Articles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/about.html"><i class="fas fa-user fa-fw me-2"></i>About Me</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div><!--//force-overflow-->
+    </header>
+    
+    <div class="main-wrapper">
+        
+<article class="blog-post px-3 py-5 p-md-5">
+    <div class="container single-col-max-width">
+        <header class="blog-post-header">
+            <h2 class="title mb-2">Codable by Example - Part 2</h2>
+            <div class="meta mb-3"><span class="date">Published Jun 13, 2019</span></div>
+        </header>
+        
+        <div class="blog-post-body">
+        <p>This article is the second part of my previous article <a href="/posts/codable-by-example.html">Codable by Example</a>. This time we'll be covering a few more scenarios when decoding JSON payloads into Swift types.</p><h2>Arrays</h2><p>We've seen in the previous article how easy it is to decode an array of objects using Decodable. Let's start with a payload consisting of an object with a few properties, one of them being an array of strings:</p><pre><code class="language-javascript">{
+    "name": "Carcassonne",
+    "minPlayers": 2,
+    "maxPlayers": 5,
+    "url": "https://boardgamegeek.com/boardgame/822/carcassonne",
+    "categories": ["City Building", "Medieval", "Territory Building"]
+}
+</code></pre><p>Decoding this into a Swift object is simple, we just need to bring the Decodable-conforming struct <code>BoardGame</code> from the previous article and make sure if contains a property to hold the array of categories:</p><pre><code class="language-swift">struct BoardGame: Decodable {
+    let name: String
+    let minPlayers: Int
+    let maxPlayers: Int
+    let url: URL
+    let categories: [String]
+}
+
+let decoder = JSONDecoder()
+let boardGame = try decoder.decode(BoardGame.self, from: data)
+</code></pre><p>Simple, right? And this works smoothly for any custom types too, as long as they conform to Decodable.</p><p>What happens however if the root element of the payload is not an object itself, but an array?</p><pre><code class="language-javascript">[{
+    "name": "Carcassonne",
+    "minPlayers": 2,
+    "maxPlayers": 5,
+    "url": "https://boardgamegeek.com/boardgame/822/carcassonne"
+},
+{
+    "name": "Azul",
+    "minPlayers": 2,
+    "maxPlayers": 4,
+    "url": "https://boardgamegeek.com/boardgame/230802/azul"
+}
+]
+</code></pre><p>No problem at all! After defining the BoardGame struct and make it conform to Decodable, we just need to decode the payload directly as an array of BoardGame objects:</p><pre><code class="language-swift">struct BoardGame: Decodable {
+    let name: String
+    let minPlayers: Int
+    let maxPlayers: Int
+    let url: URL
+}
+
+let decoder = JSONDecoder()
+let boardGame = try decoder.decode([BoardGame].self, from: data)
+</code></pre><h2>Nested arrays</h2><p>So far we've seen very simple examples where simply conforming to Decodable is enough for our needs and no custom logic is necessary. To spice things up let's simulate that an API call responded with the following JSON payload:</p><pre><code class="language-javascript">{
+    "data": {
+        "owned": [{
+                "name": "Carcassonne",
+                "minPlayers": 2,
+                "maxPlayers": 5,
+                "links": [{
+                        "source": "BoardGameGeek",
+                        "url": "https://boardgamegeek.com/boardgame/822/carcassonne"
+                    },
+                    {
+                        "source": "Wikipedia",
+                        "url": "https://en.wikipedia.org/wiki/Carcassonne_(board_game)"
+                    }
+                ]
+            },
+            {
+                "name": "Azul",
+                "minPlayers": 2,
+                "maxPlayers": 4,
+                "links": [{
+                        "source": "BoardGameGeek",
+                        "url": "https://boardgamegeek.com/boardgame/230802/azul"
+                    },
+                    {
+                        "source": "Wikipedia",
+                        "url": "https://en.wikipedia.org/wiki/Azul_(board_game)"
+                    }
+                ]
+
+            }
+        ]
+    }
+}
+</code></pre><p>As you can see we now have a few nested objects and arrays of objects. For the sake of this example, let's suppose you are only interested in the names of the board games and their urls. As usual, we'll start by defining a couple of structs to hold this data, which can look like this:</p><pre><code class="language-swift">struct BoardGame: Decodable {
+    let name: String
+    let urls: [URL]
+}
+
+struct OwnedBoardGamesResponse: Decodable {
+    let boardGames: [BoardGame]
+
+    init(from decoder: Decoder) throws {
+        ...
+    }
+}
+</code></pre><p>This time things aren't that simple. Although the OwnedBoardGamesResponse and BoardGame structs conform to Decodable, their properties don't directly map to the JSON structure, meaning we'll need to customise the decoding logic via <em>init(from decoder: Decoder)</em> and coding keys. Let's proceed to the complete implementation:</p><pre><code class="language-swift">struct BoardGame: Decodable {
+    let name: String
+    let urls: [URL]
+}
+
+struct OwnedBoardGamesResponse: Decodable {
+    let boardGames: [BoardGame]
+    
+    private enum CodingKeys: String, CodingKey {
+        case data
+        
+        enum DataKeys: String, CodingKey {
+            case owned
+            
+            enum OwnedKeys: String, CodingKey {
+                case name
+                case links
+                
+                enum LinksKeys: String, CodingKey {
+                    case url
+                }
+            }
+        }
+    }
+    
+    init(from decoder: Decoder) throws {
+        let container = try decoder.container(keyedBy: CodingKeys.self)
+        let dataContainer = try container.nestedContainer(keyedBy: CodingKeys.DataKeys.self, forKey: .data)
+        var ownedContainer = try dataContainer.nestedUnkeyedContainer(forKey: .owned) // array of objects
+        
+        var decodedBoardGames: [BoardGame] = []
+        
+        // Iterate array of objects
+        while !ownedContainer.isAtEnd {
+            let ownedEntry = try ownedContainer.nestedContainer(keyedBy: CodingKeys.DataKeys.OwnedKeys.self)
+            let name = try ownedEntry.decode(String.self, forKey: .name)
+            var linksContainer = try ownedEntry.nestedUnkeyedContainer(forKey: .links) // nested array of objects
+            
+            var urls: [URL] = []
+            
+            // Iterate array of objects
+            while !linksContainer.isAtEnd {
+                let linkEntry = try linksContainer.nestedContainer(keyedBy: CodingKeys.DataKeys.OwnedKeys.LinksKeys.self)
+                let url = try linkEntry.decode(URL.self, forKey: .url)
+                urls.append(url)
+            }
+            
+            let boardGame = BoardGame(name: name, urls: urls)
+            decodedBoardGames.append(boardGame)
+        }
+        
+        boardGames = decodedBoardGames
+    }
+}
+
+let decoder = JSONDecoder()
+let boardGame = try decoder.decode(OwnedBoardGamesResponse.self, from: data)
+</code></pre><p>It doesn't look that simple anymore, right? Let's go step by step. First we defined a <code>CodingKeys</code> enum (with a few nested enums) representing the structure of the JSON. In total we will have to go four levels deep within the JSON to be able to retrieve all the data we want. We can see that the first level ("data") contains a nested object - we've learned in the previous article how to use <code>nestedContainer(keyedBy:)</code> to decode nested objects!</p><p>Nothing new until this point, however this time the "owned" property contains a nested array (of objects... 😅). At this point you can see we introduced a new method <code>nestedUnkeyedContainer(forKey:)</code>. This method is analogous to <code>nestedContainer(keyedBy:)</code> but allows us to decode an array instead of an object.</p><p>From there onwards we just need to iterate the array by repeatedly invoking <code>nestedContainer(keyedBy:)</code> to decode the objects it contains. Each of those objects contains the "name" property we want to extract and... another array of objects ("links")! This means we just need to repeat the same process again in order to decode those objects, until we get to the urls.</p><h2>Conclusion</h2><p>Today we've seen how to leverage Decodable to have a very precise control over the data we want to extract from a JSON payload. Although in simple cases it is enough to create a struct and map it directly to the JSON, sometimes the JSON structure can be more intricate requiring custom logic to extract the data we're interested in.</p>
+        </div>
+                            
+        <nav class="blog-nav nav nav-justified my-5">
+            <a class="nav-link-prev nav-item nav-link rounded-left" href="/posts/Swift-MVVM-and-Combine.html">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+            <a class="nav-link-next nav-item nav-link rounded-right" href="/posts/codable-by-example.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+        </nav>
+        
+    </div><!--//container-->
+</article>
+
+        
+        <footer class="footer text-center py-4">
+    <small class="copyright">Rui Costa &copy; 2022</small>
+    <div>
+        <small class="form-text text-muted">Developed using <a class="text-link" href="https://www.swift.org" target="_blank">Swift</a></small>
+    </div>
+</footer>
+
+    </div><!--//main-wrapper-->
+
+    <!-- Bootstrap -->
+    <script src="/assets/plugins/popper.min.js"></script>
+    <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    
+    <!-- Syntax highlight -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    
+</body>
+</html>
+

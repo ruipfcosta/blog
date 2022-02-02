@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+Swift, MVVM and Combine
+</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rui Costa's personal website">
+    <meta name="author" content="Rui Costa">
+        git push -u origin
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    
+    <!-- FontAwesome JS -->
+    <script defer src="/assets/fontawesome/js/all.js"></script>
+    
+    <!-- Theme CSS -->
+    <link id="theme-style" rel="stylesheet" href="/assets/css/theme-9.css">
+        
+    <!-- Syntax highlight -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/stackoverflow-dark.min.css">
+
+</head>
+
+<body class="dark-mode">
+    
+    <header class="header text-center">
+        <div class="force-overflow">
+            <h1 class="blog-name pt-lg-4 mb-0"><a class="no-text-decoration" href="https://ruicosta.com">Rui Costa</a></h1>
+            
+            <nav class="navbar navbar-expand-lg navbar-dark" >
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div id="navigation" class="collapse navbar-collapse flex-column" >
+                    <div class="profile-section pt-3 pt-lg-0">
+                        <img class="profile-image mb-3 rounded-circle mx-auto" src="/assets/images/profile.png" alt="image" >
+                        
+                        <div class="bio mb-3">Hi, my name is Rui Costa and I'm a Software Engineer based in London, UK.</div><!--//bio-->
+                        <ul class="social-list list-inline py-2 mx-auto">
+                            <li class="list-inline-item"><a href="https://twitter.com/ruipfcosta"><i class="fab fa-twitter fa-fw"></i></a></li>
+                            <li class="list-inline-item"><a href="https://www.linkedin.com/in/ruipfcosta/"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
+                            <li class="list-inline-item"><a href="https://github.com/ruipfcosta"><i class="fab fa-github-alt fa-fw"></i></a></li>
+                        </ul><!--//social-list-->
+                        <hr>
+                    </div><!--//profile-section-->
+                    
+                    <ul class="navbar-nav flex-column text-start">
+                        <li class="nav-item">
+                            <a class="nav-link " href="/"><i class="fas fa-blog fa-home me-2"></i>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/blog.html"><i class="fas fa-blog fa-fw me-2"></i>Articles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/about.html"><i class="fas fa-user fa-fw me-2"></i>About Me</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div><!--//force-overflow-->
+    </header>
+    
+    <div class="main-wrapper">
+        
+<article class="blog-post px-3 py-5 p-md-5">
+    <div class="container single-col-max-width">
+        <header class="blog-post-header">
+            <h2 class="title mb-2">Swift, MVVM and Combine</h2>
+            <div class="meta mb-3"><span class="date">Published Jun 30, 2019</span></div>
+        </header>
+        
+        <div class="blog-post-body">
+        <p>One of the most exciting announcements coming from this year's WWDC is the new Combine framework. Combine provides a declarative Swift API for processing values over time, similar to other frameworks such as RxSwift, which means <a href="https://en.wikipedia.org/wiki/Functional_reactive_programming">Functional Reactive Programming</a> now becomes a first-party paradigm in the iOS world!</p><p>Although some types have different names in RxSwift and Combine, the main principles behind them are the same and should be very easy to transfer knowledge between both frameworks. At my company, Yoyo Wallet, we started using RxSwift/FRP mainly to allow different parts of the app to observe and react to data updates, but with time, and after adopting MVVM as our architectural pattern, we also started using RxSwift to set up bindings between view models and view controllers, control state changes and trigger actions.</p><p>In this article I'll be showing a technique to structure view models and control the flow of data using Combine. This approach is essentially the same we use at Yoyo, with the difference that we use RxSwift instead of Combine. For simplicity I'll be focusing on UIKit (sorry...😀)! I know Combine + UIKit might be an unlikely combination since SwiftUI is also available starting from iOS 13, so in reality this is an exercise to replace RxSwift with Combine in order to get familiar with it.</p><h2>View model</h2><p>A view model is a pure Swift representation of a view, holding all its business logic. By "view" I mean not just subclasses of UIView but also, and most importantly, UIViewController subclasses. To demonstrate this, let's pretend we are building a new screen for our app to display the details of a product and allow the user to purchase it. The screen will have a couple of labels for the product's title and description, and a button which, when tapped, triggers and API call to the backend to make that purchase. If something goes wrong with that request, a third label will show the error message to the user.</p><p>At this point we already have enough information to start building our view model:</p><pre><code class="language-swift">class ViewModel {
+    let title           = CurrentValueSubject&lt;String?, Never&gt;(nil)
+    let description     = CurrentValueSubject&lt;String?, Never&gt;(nil)
+    let buttonEnabled   = CurrentValueSubject&lt;Bool, Never&gt;(false)
+    let errorText       = CurrentValueSubject&lt;String?, Never&gt;(nil)
+    let errorTextHidden = CurrentValueSubject&lt;Bool, Never&gt;(true)
+
+    let product: Product
+
+    init(product: Product) {
+        self.product = product
+    }
+}
+</code></pre><p>As you can see, this was almost a direct translation from English to Swift! For each property we want to control on the view there is an associated property on the view model. Each view model property is defined as <code>CurrentValueSubject</code>, one of the Subject types included in Combine. But why use <code>CurrentValueSubject</code> and not plain Swift types such as String and Bool? The answer is simple, one of the key aspects of MVVM is the usage of data bindings to connect the view model to the view. <code>CurrentValueSubject</code> will allow us to set and observe its value over time, ensuring the view controller's IBOutlets are always updated accordingly.</p><h3>State</h3><p>I also mentioned that the error label is only visible when the API call fails. We can immediately identify two states for our screen: an initial state in which the user is presented with the details of a product, and an error state for when things go wrong when making the purchase. An enum feels appropriate to represent these two cases:</p><pre><code class="language-swift">enum State {
+    case initial
+    case error(message: String)
+}
+</code></pre><p>Now let's define a function to process the state. The different view model properties will be set accordingly depending on the current state:</p><pre><code class="language-swift">func processState(_ state: State) {
+    switch state {
+    case .initial:
+        title.value = product.title
+        description.value = product.description
+        buttonEnabled.value = true
+        errorText.value = nil
+        errorTextHidden.value = true
+    case .error(let message):
+        errorText.value = message
+        errorTextHidden.value = false
+    }
+}
+</code></pre><p>In order to glue everything together we just need to define a <code>state</code> property on the view model (again using <code>CurrentValueSubject</code>) and observe any changes to its value. Every time the value changes, all we need to do is to call the <code>processState</code> function created above which will then set the properties based on the current state.</p><pre><code class="language-swift">let state = CurrentValueSubject&lt;State, Never&gt;(.initial)
+
+init(product: Product) {
+    ...
+
+    _ = state.sink(receiveValue: { [weak self] state in
+        self?.processState(state)
+    })
+}
+
+</code></pre><p>Later on we'll see how the view model properties will be connected to the view controller's IBOutlets.</p><h3>Actions</h3><p>It makes sense for the view model to be the one who handles the purchase of the product. This means the view will need a way to communicate that intention to the view model. We can start by defining an <code>Action</code> enum containing the possible actions supported by the view model, similar to the <code>State</code> enum we created earlier:</p><pre><code class="language-swift">enum Action {
+    case purchase
+}
+</code></pre><p>And we can use the same approach as above to handle the actions:</p><pre><code class="language-swift">let action = PassthroughSubject&lt;Action, Never&gt;()
+
+init(product: Product) {
+    ...
+
+    _ = action.sink(receiveValue: { [weak self] action in
+        self?.processAction(action)
+    })
+}
+
+func processAction(_ action: Action) {
+    switch action {
+    case .purchase:
+        do {
+            try backend.purchaseProduct(id: product.id)
+        } catch {
+            state.value = .error(message: error.localizedDescription)
+        }
+    }
+}
+</code></pre><p>This time however we're using another type of Subject, a <code>PassthroughSubject</code>. The difference to the <code>CurrentValueSubject</code> used for the state is that, as the name suggests, its current value is not stored, it can only be observed. This is fine, because we just need to be informed every time an action is triggered and react to that. However, for the state we may need to access its current value at some point, so I prefer to use a <code>CurrentValueSubject</code> for it, although a <code>PassthroughSubject</code> would also be valid.</p><h2>View</h2><p>After all the progress we've made so far, the view will be incredibly simple to implement! Let's start by defining the IBOutlets we need and create the view model:</p><pre><code class="language-swift">class ViewController: UIViewController {
+    @IBOutlet var titleLabel: UILabel!
+    @IBOutlet var descriptionLabel: UILabel!
+    @IBOutlet var purchaseButton: UIButton!
+    @IBOutlet var errorLabel: UILabel!
+
+    let viewModel = ViewModel(product: product) // assume we have a product object already
+}
+</code></pre><p>For the sake of this example let's just assume the view model is created inside the view controller. In practice there are better ways to do this (I quite like the <a href="https://benoitpasquier.com/coordinator-pattern-swift/">coordinator pattern</a>).</p><p>Nothing exciting so far, but that's about to change! We already know our view model contains all the relevant properties for this view, and contains all the logic to determine how those properties should be set on each state. This means we just need to connect those properties to the view's IBOutlets using the <code>assign</code> function:</p><pre><code class="language-swift">var cancelables: [AnyCancellable] = []
+
+override func viewDidLoad() {
+    super.viewDidLoad()
+
+    self.cancelables = [
+        viewModel.title.assign(to: \.text, on: titleLabel),
+        viewModel.description.assign(to: \.text, on: descriptionLabel),
+        viewModel.buttonEnabled.assign(to: \.isEnabled, on: purchaseButton),
+        viewModel.errorText.assign(to: \.text, on: errorLabel),
+        viewModel.errorTextHidden.assign(to: \.isHidden, on: errorLabel)
+    ]
+}
+</code></pre><p>We'll need to hold a reference to the <code>Cancelable</code> objects returned by <code>assign</code>, otherwise the subscription will get terminated. The easiest way to do it is to just put all of them inside an array, but we could have also kept individual references to each <code>Cancelable</code> if we wanted.</p><p>Finally, we just need to connect the tap gesture on the purchase button to the respective action on the view model:</p><pre><code class="language-swift">@IBAction func purchaseButtonTouchUpInside(_ sender: UIButton) {
+    viewModel.action.send(.purchase)
+}
+</code></pre><h2>Conclusion</h2><p>It’s easy to design an MVVM architecture for our apps based on the new Combine framework. Here's a quick summary of what we've implemented:</p><ul><li>Every property we want to control on the view is matched by a property on the view model;</li><li>The view model defines enums and properties for both state and actions;</li><li>The view model observes state changes and sets its properties accordingly;</li><li>The view model reacts to any actions triggered by the view;</li><li>The view controller connects the view model properties to its IBOutlets.</li></ul><p>And finally, it's great to see Apple coming up with their own FRP framework avoiding the need to link other third-party dependencies to our apps!</p><hr><p>You can find a sample project <a href="https://github.com/ruipfcosta/MVVM-Combine-Example/tree/master">here</a>.</p>
+        </div>
+                            
+        <nav class="blog-nav nav nav-justified my-5">
+            <a class="nav-link-prev nav-item nav-link rounded-left" href="/posts/enums-in-rust.html">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+            <a class="nav-link-next nav-item nav-link rounded-right" href="/posts/codable-by-example-part-2.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+        </nav>
+        
+    </div><!--//container-->
+</article>
+
+        
+        <footer class="footer text-center py-4">
+    <small class="copyright">Rui Costa &copy; 2022</small>
+    <div>
+        <small class="form-text text-muted">Developed using <a class="text-link" href="https://www.swift.org" target="_blank">Swift</a></small>
+    </div>
+</footer>
+
+    </div><!--//main-wrapper-->
+
+    <!-- Bootstrap -->
+    <script src="/assets/plugins/popper.min.js"></script>
+    <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    
+    <!-- Syntax highlight -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    
+</body>
+</html>
+

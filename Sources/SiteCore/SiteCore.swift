@@ -114,7 +114,7 @@ public class SiteCore{
                 let destination = outputPath + Path(location)
                 print("Processing:", location)
                 
-                if destination.extension == nil {
+                if destination.isDirectory {
                     do {
                         try destination.mkpath()
                     } catch {

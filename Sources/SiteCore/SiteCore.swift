@@ -114,13 +114,13 @@ public class SiteCore{
                 let destination = outputPath + Path(location)
                 print("Processing:", location)
                 
-                if destination.isDirectory {
+                if path.isDirectory {
                     do {
                         try destination.mkpath()
                     } catch {
                         print("Ignoring")
                     }
-                } else if destination.extension == "html" {
+                } else if path.extension == "html" {
                     if let page = Page(rawValue: destination.lastComponentWithoutExtension) {
                         let pageHtml = try environment.renderTemplate(name: destination.lastComponent, context: context(for: page))
                         try destination.write(pageHtml)

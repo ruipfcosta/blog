@@ -69,7 +69,7 @@ let prize_description =
     };
 ```
 
-Finally, just like structs, enums can also contain methods and implement traits:
+Finally, just like [structs](/posts/structs-in-rust.html), enums can also contain methods and implement traits:
 
 ```rust
 trait Freebie {

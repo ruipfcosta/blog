@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>
+Structs in Rust
+</title>
+    
+    <!-- Meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Rui Costa's personal website">
+    <meta name="author" content="Rui Costa">
+    
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700" rel="stylesheet">
+    
+    <!-- FontAwesome JS -->
+    <script defer src="/assets/fontawesome/js/all.js"></script>
+    
+    <!-- Theme CSS -->
+    <link id="theme-style" rel="stylesheet" href="/assets/css/theme-9.css">
+        
+    <!-- Syntax highlight -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/stackoverflow-dark.min.css">
+
+    <!-- Analytics -->
+    <script defer data-domain="ruicosta.com" src="https://plausible.io/js/plausible.js"></script>
+
+</head>
+
+<body class="dark-mode">
+    
+    <header class="header text-center">
+        <div class="force-overflow">
+            <h1 class="blog-name pt-lg-4 mb-0"><a class="no-text-decoration" href="https://ruicosta.com">Rui Costa</a></h1>
+            
+            <nav class="navbar navbar-expand-lg navbar-dark" >
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                
+                <div id="navigation" class="collapse navbar-collapse flex-column" >
+                    <div class="profile-section pt-3 pt-lg-0">
+                        <img class="profile-image mb-3 rounded-circle mx-auto" src="/assets/images/profile.png" alt="image" >
+                        
+                        <div class="bio mb-3">Hi, my name is Rui Costa and I'm a Software Engineer based in London, UK.</div><!--//bio-->
+                        <ul class="social-list list-inline py-2 mx-auto">
+                            <li class="list-inline-item"><a href="https://twitter.com/ruipfcosta"><i class="fab fa-twitter fa-fw"></i></a></li>
+                            <li class="list-inline-item"><a href="https://www.linkedin.com/in/ruipfcosta/"><i class="fab fa-linkedin-in fa-fw"></i></a></li>
+                            <li class="list-inline-item"><a href="https://github.com/ruipfcosta"><i class="fab fa-github-alt fa-fw"></i></a></li>
+                        </ul><!--//social-list-->
+                        <hr>
+                    </div><!--//profile-section-->
+                    
+                    <ul class="navbar-nav flex-column text-start">
+                        <li class="nav-item">
+                            <a class="nav-link " href="/"><i class="fas fa-blog fa-home me-2"></i>Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/blog.html"><i class="fas fa-blog fa-fw me-2"></i>Articles</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " href="/about.html"><i class="fas fa-user fa-fw me-2"></i>About Me</a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </div><!--//force-overflow-->
+    </header>
+    
+    <div class="main-wrapper">
+        
+<article class="blog-post px-3 py-5 p-md-5">
+    <div class="container single-col-max-width">
+        <header class="blog-post-header">
+            <h2 class="title mb-2">Structs in Rust</h2>
+            <div class="meta mb-3"><span class="date">Published Feb 26, 2022</span></div>
+        </header>
+        
+        <div class="blog-post-body">
+        <p>Rust structs are user-defined types which combine an arbitrary number of values under a new type. They are the building blocks used to model an application's domain.</p><p>Rust has three kinds of structs, all created using the <code>struct</code> keyword:</p><ul><li>Structs with named fields</li><li>Tuple structs</li><li>Unit structs</li></ul><h3>Structs with named fields</h3><p>A struct with named fields is created using the <code>struct</code> keyword, followed by the struct name and a list of fields tagged with their respective data types. A board game struct could be defined this way:</p><pre><code class="language-rust">struct BoardGame {
+    name: String,
+    min_players: u8,
+    max_players: u8,
+    publisher: String
+} 
+</code></pre><p>This is how we can create an instance of the <code>BoardGame</code> struct and access its fields:</p><pre><code class="language-rust">let mut board_game_1 = BoardGame {
+    name: String::from("Agricola"),
+    min_players: 1,
+    max_players: 5,
+    publisher: String::from("Mayfair Games")
+};
+
+board_game_1.publisher = String::from("New publisher name");
+</code></pre><p>Note that in order to mutate the instance it is necessary to make it mutable explicitly with <code>let mut</code>.</p><h4>Field init shorthand syntax</h4><p>When initialising a struct whose field names match the parameter values being used, Rust provides a shorthand syntax to make this more pleasant to write. Let's extend the previous example to see this scenario in action:</p><pre><code class="language-rust">let min_players: u8 = 1;
+let max_players: u8 = 5;
+
+let board_game_1 = BoardGame {
+    name: String::from("Agricola"),
+    min_players: min_players,
+    max_players: max_players,
+    publisher: String::from("Mayfair Games")
+};
+</code></pre><p>This could be simplified using the field init shorthand syntax, which avoids having to repeat <code>min_players</code> and <code>max_players</code> for both the struct fields and their parameters.</p><pre><code class="language-rust">let min_players: u8 = 1;
+let max_players: u8 = 5;
+
+let board_game_1 = BoardGame {
+    name: String::from("Agricola"),
+    min_players, // instead of min_players: min_players 
+    max_players, // instead of max_players: max_players
+    publisher: String::from("Mayfair Games")
+};
+</code></pre><h4>Struct update syntax</h4><p>Another common scenario when dealing with structs is wanting to initialise an instance of a struct based on another instance. Again, let's extend the initial example, this time to create a second board game instance based on the original one:</p><pre><code class="language-rust">let board_game_1 = BoardGame {
+    name: String::from("Agricola"),
+    min_players: min_players,
+    max_players: max_players,
+    publisher: String::from("Mayfair Games")
+};
+
+let board_game_2 = BoardGame {
+    name: String::from("Agricola Revised Edition"),
+    min_players: board_game_1.min_players,
+    max_players: board_game_1.max_players,
+    publisher: board_game_1.publisher
+};
+</code></pre><p>This can become quite tedious, especially when most fields remain the same. To help with this, we can use the struct update syntax:</p><pre><code class="language-rust">let board_game_1 = BoardGame {
+    name: String::from("Agricola"),
+    min_players: min_players,
+    max_players: max_players,
+    publisher: String::from("Mayfair Games")
+};
+
+let board_game_2 = BoardGame {
+    name: String::from("Agricola Revised Edition"),
+    ..board_game_1
+};
+</code></pre><p>The only property that is different from the original instance was the name. The <code>..board_game_1</code> syntax ensures the remaining fields on <code>board_game_2</code> are initialised taking their values from <code>board_game_1</code>.</p><h3>Tuple structs</h3><p>Tuple structs are very similar to tuples. Both are created the same way, however tuple structs must have a name:</p><pre><code class="language-rust">struct Product(String, f64);
+
+let product = Product(String::from("MacBook Pro"), 1499.99);
+</code></pre><p>The values of a tuple struct can be accessed just like tuples:</p><pre><code class="language-rust">let product = Product(String::from("MacBook Pro"), 1499.99);
+
+let product_name = product.0;
+let product_price = product.1; 
+</code></pre><h3>Unit structs</h3><p>The final struct type, unit structs, contain no fields:</p><pre><code class="language-rust">struct EmptyResponse;
+
+let response = EmptyResponse;
+</code></pre><p>Unit structs resemble the unit type <code>()</code> and can be useful in some situations, for example with generics.</p><h2>Methods and traits</h2><p>Structs can contain methods:</p><pre><code class="language-rust">impl BoardGame {
+    fn can_be_played_alone(&amp;self) -&gt; bool {
+        self.min_players == 1
+    }
+}
+
+let board_game_1 = BoardGame {
+    name: String::from("Catan"),
+    min_players: 3,
+    max_players: 5,
+    publisher: String::from("Publisher")
+};
+
+if board_game_1.can_be_played_alone() { // false
+   println!("Can be played alone!");
+} else {
+   println!("Minimum of {} people!", board_game_1.min_players);
+}
+</code></pre><p>And can implement traits:</p><pre><code class="language-rust">trait IdentifiableGame {
+    fn game_identifier(&amp;self) -&gt; String;
+}
+
+impl IdentifiableGame for BoardGame {
+    fn game_identifier(&amp;self) -&gt; String {
+        format!("{} by {}", self.name, self.publisher)
+    }
+}
+
+println!("{}", board_game_1.game_identifier());
+</code></pre>
+        </div>
+                            
+        <nav class="blog-nav nav nav-justified my-5">
+            <a class="nav-link-prev nav-item nav-link rounded-left" href="/posts/codable-by-example.html">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+            <a class="nav-link-next nav-item nav-link rounded-right" href="/posts/enums-in-rust.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
+        </nav>
+        
+    </div><!--//container-->
+</article>
+
+        
+        <footer class="footer text-center py-4">
+    <small class="copyright">Rui Costa &copy; 2022</small>
+    <div>
+        <small class="form-text text-muted">Developed using <a class="text-link" href="https://www.swift.org" target="_blank">Swift</a></small>
+    </div>
+</footer>
+
+    </div><!--//main-wrapper-->
+
+    <!-- Bootstrap -->
+    <script src="/assets/plugins/popper.min.js"></script>
+    <script src="/assets/plugins/bootstrap/js/bootstrap.min.js"></script>
+    
+    <!-- Syntax highlight -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/highlight.min.js"></script>
+    <script>hljs.highlightAll();</script>
+    
+</body>
+</html>
+

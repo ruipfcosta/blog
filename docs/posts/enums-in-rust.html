@@ -120,7 +120,7 @@ let prize_description =
         Reward::Prize { description: desc, code: code } =&gt;
             format!("You won {}! Use the code {} to redeem", desc, code)
     };
-</code></pre><p>Finally, just like structs, enums can also contain methods and implement traits:</p><pre><code class="language-rust">trait Freebie {
+</code></pre><p>Finally, just like <a href="/posts/structs-in-rust.html">structs</a>, enums can also contain methods and implement traits:</p><pre><code class="language-rust">trait Freebie {
     fn has_freebie(self) -&gt; bool;
 }
 
@@ -139,7 +139,7 @@ impl Freebie for Reward {
         </div>
                             
         <nav class="blog-nav nav nav-justified my-5">
-            <a class="nav-link-prev nav-item nav-link rounded-left" href="/posts/codable-by-example.html">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
+            <a class="nav-link-prev nav-item nav-link rounded-left" href="/posts/structs-in-rust.html">Previous<i class="arrow-prev fas fa-long-arrow-alt-left"></i></a>
             <a class="nav-link-next nav-item nav-link rounded-right" href="/posts/Swift-MVVM-and-Combine.html">Next<i class="arrow-next fas fa-long-arrow-alt-right"></i></a>
         </nav>
         

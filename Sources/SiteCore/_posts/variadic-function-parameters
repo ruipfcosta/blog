@@ -43,7 +43,7 @@ sum(1, 2, 3, prefix: "Sum")
 
 ## Why not just use arrays?
 
-One could argue that any API using variadics could equally be replaced with arrays directly. While that is not wrong, variadics can sometimes simplify signatures and provide a more elegant and user-friendly API.
+One could argue that any API using variadics could equally be replaced by arrays directly. While that is not wrong, variadics can sometimes simplify signatures and provide a more elegant and user-friendly API.
 
 Array version:
 

@@ -1,4 +1,4 @@
-// swift-tools-version:5.5
+// swift-tools-version: 6.0
 
 import PackageDescription
 
@@ -15,8 +15,8 @@ let package = Package(
         )
     ],
     dependencies: [
-        .package(url: "https://github.com/stencilproject/Stencil.git", .exact("0.14.2")),
-        .package(url: "https://github.com/johnsundell/ink.git", from: "0.1.0")
+        .package(url: "https://github.com/stencilproject/Stencil.git", exact: "0.15.1"),
+        .package(url: "https://github.com/johnsundell/ink.git", exact: "0.6.0")
     ],
     targets: [
         .target(
@@ -28,7 +28,7 @@ let package = Package(
                 .copy("Content"),
             ]
         ),
-        .target(
+        .executableTarget(
             name: "SiteBuilder",
             dependencies: ["SiteCore", "Stencil"]
         ),

@@ -1,18 +1,18 @@
 import Foundation
-import Ink
+@preconcurrency import Ink
 import PathKit
 
 struct Post {
     static let markdownParser = MarkdownParser()
     
-    static var markdownDateFormatter: DateFormatter = {
+    static let markdownDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "dd-MM-yyyy"
         
         return formatter
     }()
     
-    static var publishDateFormatter: DateFormatter = {
+    static let publishDateFormatter: DateFormatter = {
         let formatter = DateFormatter()
         formatter.dateFormat = "MMM dd, yyyy"
         

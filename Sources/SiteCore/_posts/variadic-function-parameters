@@ -1,0 +1,68 @@
+---
+title: Variadic Function Parameters
+summary: Variadics are one of the simplest and most overlooked features in Swift. They are used to specifcy a parameter that can accept a variable number of values.
+date: 15-10-2024
+---
+Variadics are one of the simplest and most overlooked features in Swift. They are used to specifcy a parameter that can accept a variable number of values.
+
+Variadic parameters are specified by suffixing their type with `...`. Their values are then made available to the function as an array.
+
+```swift
+func sum(_ numbers: Int...) -> Int {
+    numbers.reduce(0, +)
+}
+```
+
+Variadics can accept zero or more values:
+
+```swift
+sum()                 // 0
+sum(1, 2)             // 3
+sum(1, 2, 3, 4, 5)    // 15
+```
+
+When mixing multiple parameters, including variadics, the compiler must be able to distinguish which values belong to the different parameters. For this to be possible, the first parameter following a variadic (which may or may not be another variadic parameter) must be labeled.
+
+```swift
+// This won't compile since prefix must be labeled
+func sum(_ numbers: Int..., _ prefix: String) -> String {
+    let total = numbers.reduce(0, +)
+    return "\(prefix): \(total)"
+}
+
+sum(1, 2, 3, "Sum")
+
+// This will compile
+func sum(_ numbers: Int..., prefix: String) -> String {
+    let total = numbers.reduce(0, +)
+    return "\(prefix): \(total)"
+}
+
+sum(1, 2, 3, prefix: "Sum")
+```
+
+## Why not just use arrays?
+
+One could argue that any API using variadics could equally be replaced with arrays directly. While that is not wrong, variadics can sometimes simplify signatures and provide a more elegant and user-friendly API.
+
+Array version:
+
+```swift
+func log(_ text: String, _ numbers: [Int] = []) {
+    print(text, numbers.map(String.init).joined(separator: ";"))
+}
+
+log("Data", [1, 2, 3, 4])
+log("No data")
+```
+
+Variadic version:
+
+```swift
+func log(_ text: String, _ numbers: Int...) {
+    print(text, numbers.map(String.init).joined(separator: ";"))
+}
+
+log("Data", 1, 2, 3, 4)
+log("No data")
+```

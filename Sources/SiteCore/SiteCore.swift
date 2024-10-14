@@ -34,7 +34,7 @@ public class SiteCore{
         self.partialsPath = resourcesPath + Path("_partials")
         self.postsPath = resourcesPath + Path("_posts")
         self.contentPath = resourcesPath + Path("Content")
-        self.outputPath = Path.current + Path("Output")
+        self.outputPath = Path.current + Path("docs")
         self.postsOutputPath = outputPath + Path("posts")
         self.environment = Environment(loader: FileSystemLoader(paths: [partialsPath, contentPath]), extensions: [])        
     }

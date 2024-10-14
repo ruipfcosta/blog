@@ -1,9 +1,9 @@
 ---
 title: Variadic Function Parameters
-summary: Variadics are one of the simplest and most overlooked features in Swift. They are used to specifcy a parameter that can accept a variable number of values.
+summary: Variadics are one of the simplest and most overlooked features in Swift. They are used to specify a parameter that can accept a variable number of values.
 date: 15-10-2024
 ---
-Variadics are one of the simplest and most overlooked features in Swift. They are used to specifcy a parameter that can accept a variable number of values.
+Variadics are one of the simplest and most overlooked features in Swift. They are used to specify a parameter that can accept a variable number of values.
 
 Variadic parameters are specified by suffixing their type with `...`. Their values are then made available to the function as an array.
 

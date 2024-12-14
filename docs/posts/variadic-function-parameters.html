@@ -25,7 +25,7 @@ Variadic Function Parameters
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.4.0/styles/stackoverflow-dark.min.css">
 
     <!-- Analytics -->
-    <script defer data-domain="ruicosta.com" src="https://plausible.io/js/plausible.js"></script>
+    <script src="https://cdn.telemetrydeck.com/websdk/telemetrydeck.min.js" data-app-id="E7431650-CA6B-47BE-B8DF-FD8F8A3D1434"></script>
 
 </head>
 
@@ -80,7 +80,7 @@ Variadic Function Parameters
         </header>
         
         <div class="blog-post-body">
-        <p>Variadics are one of the simplest and most overlooked features in Swift. They are used to specifcy a parameter that can accept a variable number of values.</p><p>Variadic parameters are specified by suffixing their type with <code>...</code>. Their values are then made available to the function as an array.</p><pre><code class="language-swift">func sum(_ numbers: Int...) -&gt; Int {
+        <p>Variadics are one of the simplest and most overlooked features in Swift. They are used to specify a parameter that can accept a variable number of values.</p><p>Variadic parameters are specified by suffixing their type with <code>...</code>. Their values are then made available to the function as an array.</p><pre><code class="language-swift">func sum(_ numbers: Int...) -&gt; Int {
     numbers.reduce(0, +)
 }
 </code></pre><p>Variadics can accept zero or more values:</p><pre><code class="language-swift">sum()                 // 0
@@ -101,7 +101,7 @@ func sum(_ numbers: Int..., prefix: String) -&gt; String {
 }
 
 sum(1, 2, 3, prefix: "Sum")
-</code></pre><h2>Why not just use arrays?</h2><p>One could argue that any API using variadics could equally be replaced with arrays directly. While that is not wrong, variadics can sometimes simplify signatures and provide a more elegant and user-friendly API.</p><p>Array version:</p><pre><code class="language-swift">func log(_ text: String, _ numbers: [Int] = []) {
+</code></pre><h2>Why not just use arrays?</h2><p>One could argue that any API using variadics could equally be replaced by arrays directly. While that is not wrong, variadics can sometimes simplify signatures and provide a more elegant and user-friendly API.</p><p>Array version:</p><pre><code class="language-swift">func log(_ text: String, _ numbers: [Int] = []) {
     print(text, numbers.map(String.init).joined(separator: ";"))
 }
 
